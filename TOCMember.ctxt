@@ -1,0 +1,17 @@
+#BlueJ class context
+comment0.params=newPmKeys\ newName\ newAdmin
+comment0.target=TOCMember(int,\ java.lang.String,\ boolean)
+comment0.text=\r\n\ The\ constructor.\ Set\ the\ member's\ details\ initially\r\n
+comment1.params=userPmKeys\ userName\ userAdmin
+comment1.target=void\ updateMember(int,\ java.lang.String,\ boolean)
+comment1.text=\r\n\ Update\ the\ user\ details\ when\ a\ new\ user\ has\ logged\ in.\ Called\ by\ TOCManager\ usually\r\n\ \r\n\ @param\ \ \ userPmKeys\ \ The\ new\ user's\ pmKeys\r\n\ @param\ \ \ userName\ \ \ \ The\ new\ user's\ name\r\n\ @param\ \ \ userAdmin\ \ \ The\ new\ user's\ admin\ flag\r\n
+comment2.params=
+comment2.target=int\ getPmKeys()
+comment2.text=\r\n\ Gets\ the\ member's\ pmKeys\r\n\ \r\n\ @return\ \ \ \ \ \ \ \ \ \ a\ member's\ pmkeys\r\n
+comment3.params=
+comment3.target=java.lang.String\ getName()
+comment3.text=\r\n\ Gets\ the\ member's\ name\r\n\ \r\n\ @return\ \ \ \ \ \ \ \ \ \ a\ member's\ name\r\n
+comment4.params=
+comment4.target=boolean\ isAdmin()
+comment4.text=\r\n\ Gets\ the\ member's\ admin\ flag\r\n\ \r\n\ @return\ \ \ \ \ \ \ \ \ \ the\ admin\ flag\ (true\ or\ false)\r\n
+numComments=5
