@@ -348,13 +348,15 @@ public class TOCDatabase {
        connect();
        
        try{
-           PreparedStatement stmt = conn.prepareStatement("INSERT INTO TRANSACTIONS VALUES(NULL,?,?,?)");
+           PreparedStatement stmt = conn.prepareStatement("INSERT INTO TRANSACTIONS VALUES(NULL,?,?,?,?,?)");
            stmt.setInt(1,pmkeys);
            stmt.setString(2,barcode);
+           stmt.setString(3,getItemName(barcode));
+           stmt.setDouble(4,getItemCost(barcode));
            
            // Add the date and time. Maybe think of a better way to solve this
            String dateTime = "" + LocalDateTime.now();
-           stmt.setString(3,dateTime);
+           stmt.setString(5,dateTime);
            
            stmt.executeUpdate();
            stmt.close();
@@ -386,8 +388,8 @@ public class TOCDatabase {
            results = stmt.executeQuery();
            while(results.next()) {                
                String itemCode = results.getString("BARCODE");
-               String itemName = getItemName(itemCode);
-               double itemCost = getItemCost(itemCode);
+               String itemName = results.getString("NAME");
+               double itemCost = results.getDouble("COST");
                String purchaseDate = results.getString("DATE");
                
                transactions = transactions + purchaseDate + " - " + itemName + " - $" + itemCost + "\n";
@@ -444,6 +446,8 @@ public class TOCDatabase {
                   "NUM      INTEGER     PRIMARY KEY     AUTOINCREMENT," +
                   "PMKEYS   INT         NOT NULL,"                      +
                   "BARCODE  VARCHAR(30) NOT NULL,"                      +
+                  "NAME     VARCHAR(30) NOT NULL,"                      +
+                  "COST     REAL        NOT NULL,"                      +
                   "DATE     TEXT        NOT NULL)";
             stmt.executeUpdate(sql);
             System.out.println("Transactions table created");
