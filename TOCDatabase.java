@@ -341,32 +341,44 @@ public class TOCDatabase {
     * Adds a new transaction to the TRANSACTIONS database
     * 
     * @param    pmkeys      the pmkeys of the member making the transaction
-    * @param    barcode     the barcode of the item the member 
+    * @param    barcode     the barcode of the item the member
+    * 
+    * @return               a boolean indicating if the transaction was successful 
     */
-   public void addTransaction(int pmkeys, String barcode) {
+   public boolean addTransaction(int pmkeys, String barcode) {
+       // A checker if the transaction was successful (ie. there is stock available)
+       boolean transactionAdded = false;
+       
        // Establish a connection to the database
        connect();
        
        try{
-           PreparedStatement stmt = conn.prepareStatement("INSERT INTO TRANSACTIONS VALUES(NULL,?,?,?,?,?)");
-           stmt.setInt(1,pmkeys);
-           stmt.setString(2,barcode);
-           stmt.setString(3,getItemName(barcode));
-           stmt.setDouble(4,getItemCost(barcode));
-           
-           // Add the date and time. Maybe think of a better way to solve this
-           String dateTime = "" + LocalDateTime.now();
-           stmt.setString(5,dateTime);
-           
-           stmt.executeUpdate();
-           stmt.close();
+           // Check if there is recorded stock of the item
+           if(getItemStock(barcode) > 0) {
+               PreparedStatement stmt = conn.prepareStatement("INSERT INTO TRANSACTIONS VALUES(NULL,?,?,?,?,?)");
+               stmt.setInt(1,pmkeys);
+               stmt.setString(2,barcode);
+               stmt.setString(3,getItemName(barcode));
+               stmt.setDouble(4,getItemCost(barcode));
+               
+               // Add the date and time. Maybe think of a better way to solve this
+               String dateTime = "" + LocalDateTime.now();
+               stmt.setString(5,dateTime);
+               
+               stmt.executeUpdate();
+               stmt.close();
+               
+               transactionAdded = true;
+           }
            conn.close();
         }catch(Exception e) {
                 System.err.println(e.getClass().getName() + ": " + e.getMessage());
                 System.err.println("Error at TOCDatabase addTransaction(int pmkeys, String barcode)");
                 System.err.println("Something went wrong, please contact one of the TOC's admins");
                 System.exit(0);
-        }
+       }
+       
+       return transactionAdded;
    }
    
    /**
