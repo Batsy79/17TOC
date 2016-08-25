@@ -170,6 +170,34 @@ public class TOCDatabase {
    }
    
    /**
+    * Removes member from the MEMBERS table. As an additional note, this will not remove the member's details from the
+    * TRANSACTIONS table so their past bills will still be available. NOTE TO GORDO: Would you like it to be like this 
+    * or would you like to remove the bills as well?
+    * 
+    * @param    pmKeys      the member's pmKeys
+    */
+   public void removeMember(int pmKeys) {
+       // First check if the member exists and then remove them from the database
+       if(memberExists(pmKeys)) {
+           // Establish a connection to the database
+           connect();
+           
+           try {
+               PreparedStatement stmt = conn.prepareStatement("DELETE FROM MEMBERS WHERE ID = ?");
+               stmt.setInt(1,pmKeys);
+               stmt.executeUpdate();
+               stmt.close();
+               conn.close();
+           }catch(Exception e) {
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                System.err.println("Error at TOCDatabase removeMember(int pmKeys)");
+                System.err.println("Something went wrong, please contact one of the TOC's admins");
+                System.exit(0);
+           }
+       }
+   }
+   
+   /**
     * Check if an item exists in the database
     * 
     * @param    barcode     the barcode of the item to search for

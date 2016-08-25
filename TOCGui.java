@@ -75,6 +75,7 @@ public class TOCGui {
         printLine("(B)uy items");
         printLine("(S)ee bill");
         printLine("(A)dd Member");
+        printLine("(R)emove Member");
         printLine("(N)ew Item");
         printLine("(Q)uit");
         printLine("------------------------------");
@@ -85,9 +86,9 @@ public class TOCGui {
         while(!ok) {
             System.out.print("Selection: ");
             choice = getInput(0);
-            ok = (choice == 'G' || choice == 'D' || choice == 'B' || choice == 'Q' || choice == 'A' || choice == 'N' || choice == 'S');
+            ok = (choice == 'G' || choice == 'D' || choice == 'B' || choice == 'Q' || choice == 'A' || choice == 'R' || choice == 'N' || choice == 'S');
             if(!ok) {
-                printLine("Please type g,G,d,D,b,B,s,S,a,A,n,N,q,Q");
+                printLine("Please type g,G,d,D,b,B,s,S,a,A,r,R,n,N,q,Q");
                 printLine("");
             }
         }
@@ -146,6 +147,9 @@ public class TOCGui {
                 case 'A':
                     addNewMember();
                     break;
+                case 'R':
+                    removeMember();
+                    break;
                 case 'N':
                     addNewItem();
                     break;
@@ -203,6 +207,32 @@ public class TOCGui {
             }
             
             manager.newMember(pmkeys,name,isAdmin);
+            printLine("");
+        }else {
+            printLine("Sorry you must be an admin");
+        }
+    }
+    
+    /**
+     * Asks the mamanger to remove member from the database
+     */
+    private void removeMember() {
+        // Check if the user requesting to modify the database is an admin
+        if(manager.getMemberAdmin()) {
+            String input = "";
+            
+            // Ask for pmkeys
+            System.out.print("pmKeys of member to remove: ");
+            int pmkeys = 0;
+            input = getInput();
+            try {
+                pmkeys = Integer.valueOf(input);
+            }catch(NumberFormatException e) {
+                pmkeys = 0;
+            }
+            
+            // Pass the details to the manager
+            manager.removeMember(pmkeys);
             printLine("");
         }else {
             printLine("Sorry you must be an admin");

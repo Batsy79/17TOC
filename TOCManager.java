@@ -90,6 +90,19 @@ public class TOCManager {
     }
     
     /**
+     * Will remove member from the databse. Will not modify the transactions that member has made and will keep their
+     * bills stored in the transactions table. The database function this calls should check if the members first exists
+     * This function will not allow the user to remove a member with the same pmkeys as them (ie. themselves)
+     * 
+     * @param   pmKeys  the member's pmKeys
+     */
+    public void removeMember(int pmKeys) {
+        if(pmKeys != getMemberPmKeys()) {
+            db.removeMember(pmKeys);
+        }
+    }
+    
+    /**
      * Get the current member's pmKeys
      * 
      * @return          The current member's pmKeys
