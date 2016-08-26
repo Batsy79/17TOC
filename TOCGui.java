@@ -76,7 +76,10 @@ public class TOCGui {
         printLine("(S)ee bill");
         printLine("(A)dd Member");
         printLine("(R)emove Member");
+        printLine("(U)pdate admin status");
         printLine("(N)ew Item");
+        printLine("(E)xile Item");
+        printLine("(C)hange item cost");
         printLine("(Q)uit");
         printLine("------------------------------");
         
@@ -86,9 +89,9 @@ public class TOCGui {
         while(!ok) {
             System.out.print("Selection: ");
             choice = getInput(0);
-            ok = (choice == 'G' || choice == 'D' || choice == 'B' || choice == 'Q' || choice == 'A' || choice == 'R' || choice == 'N' || choice == 'S');
+            ok = (choice == 'G' || choice == 'D' || choice == 'B' || choice == 'Q' || choice == 'A' || choice == 'R' || choice == 'U' || choice == 'N' || choice == 'S' || choice == 'C' || choice == 'E');
             if(!ok) {
-                printLine("Please type g,G,d,D,b,B,s,S,a,A,r,R,n,N,q,Q");
+                printLine("Please type g,G,d,D,b,B,s,S,a,A,r,R,n,N,q,Q,u,U,c,C,e,E");
                 printLine("");
             }
         }
@@ -150,8 +153,17 @@ public class TOCGui {
                 case 'R':
                     removeMember();
                     break;
+                case 'U':
+                    updateAdmin();
+                    break;
                 case 'N':
                     addNewItem();
+                    break;
+                case 'E':
+                    removeItem();
+                    break;
+                case 'C':
+                    updateCost();
                     break;
                 case 'Q':
                     break;
@@ -240,6 +252,32 @@ public class TOCGui {
     }
     
     /**
+     * Asks the manager to update the admin status of a member from the database
+     */
+    private void updateAdmin () {
+                // Check if the user requesting to modify the database is an admin
+        if (manager.getMemberAdmin()) {
+            String input = "";
+            
+            // Ask for pmkeys
+            System.out.print("pmKeys of member to update: ");
+            int pmkeys = 0;
+            input = getInput();
+            try {
+                pmkeys = Integer.valueOf(input);
+            }catch(NumberFormatException e) {
+                pmkeys = 0;
+            }
+            
+            // Pass the details to the manager
+            manager.updateAdmin(pmkeys);
+            printLine("");
+        }else {
+            printLine("Sorry you must be an admin");
+        }
+    }
+   
+    /**
      * Prompts the user to type the barcode of the item we want to see the details for
      */
     private void getItemDetails() {
@@ -314,6 +352,60 @@ public class TOCGui {
         }else {
             printLine("Sorry you must be an admin");
         }
+    }
+    
+    /**
+     * Asks the manager to remove an item from the databse
+     */
+    private void removeItem() {
+        String input = "";
+        
+        // Ask for barcode
+        System.out.print("Barcode of item to remove: ");
+        String barcode = "";
+        barcode = getInput();
+        
+        try {
+            barcode = String.valueOf(input);
+        }catch(NumberFormatException e) {
+            barcode = "";
+        }
+        
+        // Pass the details to the manager
+        manager.removeItem(barcode);
+        printLine("");
+    }
+    
+    /**
+     * Asks the manager to update the cost of an item
+     */
+    private void updateCost () {
+                
+            String input = "";
+            
+            // Ask for barcode of item
+            System.out.print("Barcode of item to update: ");
+            int barcode = 0;
+            input = getInput();
+            try {
+                barcode = Integer.valueOf(input);
+            }catch(NumberFormatException e) {
+                barcode = 0;
+            }
+            
+            // Ask for updated cost
+            System.out.print("Updated cost: ");
+            double cost = 0.0;
+            input = getInput();
+            try {
+                cost = Double.valueOf(input);
+            }catch(NumberFormatException e) {
+                cost = 0.0;
+            }
+            
+            // Pass the details to the manager
+            manager.updateCost(cost, barcode);
+            printLine("");
     }
     
     /**

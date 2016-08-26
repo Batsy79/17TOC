@@ -198,6 +198,37 @@ public class TOCDatabase {
    }
    
    /**
+    * Changes the member status of a member to either admin or not admin
+    * 
+    * @param pmKeys the members pmKeys to be updated
+    */
+   public void updateAdmin (int pmKeys) {
+       // First check if the member exists and then remove them from the database
+       if(memberExists(pmKeys)) {
+           //Checks to see if the member is an admin 
+           int admin = memberIsAdmin(pmKeys) ? 0 : 1;
+           
+           // Establish a connection to the database
+           connect();
+          
+           try {
+               PreparedStatement stmt = conn.prepareStatement("UPDATE members SET admin = ? WHERE ID = ?");
+               stmt.setInt(1,admin);
+               stmt.setInt(2,pmKeys);
+               stmt.executeUpdate();
+               System.out.println("TEST");
+               stmt.close();
+               conn.close();
+           }catch(Exception e) {
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                System.err.println("Error at TOCDatabase updateAdmin(int pmKeys)");
+                System.err.println("Something went wrong, please contact one of the TOC's admins");
+                System.exit(0);
+           }
+       }
+   }
+   
+   /**
     * Check if an item exists in the database
     * 
     * @param    barcode     the barcode of the item to search for
@@ -301,6 +332,33 @@ public class TOCDatabase {
    }
    
    /**
+    * Updates the cost of an item in the database
+    * 
+    * @param cost the updated cost of the item
+    * @param barcode the barcode of the updated item
+    */
+   public void updateCost (double cost, int barcode) {
+           // Establish a connection to the database
+           connect();
+          
+           double Cost = cost; 
+           int Barcode = barcode;
+           try {
+               PreparedStatement stmt = conn.prepareStatement("UPDATE items SET cost = ? WHERE barcode = ?");
+               stmt.setDouble(1,Cost);
+               stmt.setInt(2,Barcode);
+               stmt.executeUpdate();
+               stmt.close();
+               conn.close();
+           }catch(Exception e) {
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                System.err.println("Error at TOCDatabase updateAdmin(int pmKeys)");
+                System.err.println("Something went wrong, please contact one of the TOC's admins");
+                System.exit(0);
+           }
+       }
+   
+   /**
     * Gets the stok of the item that matches the barcode
     * 
     * @param    barcode     the barcode of the item
@@ -331,6 +389,31 @@ public class TOCDatabase {
        }
         
        return stock;
+   }
+   
+   /**
+    * Removes and item from the database
+    * 
+    * @param barcode the barcode of the item to be removed
+    */
+   public void removeItem(String barcode) {
+           // Establish a connection to the database
+           connect();
+           
+           String Barcode = barcode;
+           
+           try {
+               PreparedStatement stmt = conn.prepareStatement("DELETE FROM items WHERE barcode = ?");
+               stmt.setString(1,Barcode);
+               stmt.executeUpdate();
+               stmt.close();
+               conn.close();
+           }catch(Exception e) {
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                System.err.println("Error at TOCDatabase removeMember(int pmKeys)");
+                System.err.println("Something went wrong, please contact one of the TOC's admins");
+                System.exit(0);
+           }
    }
    
    /**

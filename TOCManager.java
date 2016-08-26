@@ -103,6 +103,16 @@ public class TOCManager {
     }
     
     /**
+     * Checks to make sure the current admin is not removing themselves
+     * 
+     * @param pmKeys the member's pmKeys to be updated
+     */
+    public void updateAdmin(int pmKeys) {
+        if(pmKeys != getMemberPmKeys())
+            db.updateAdmin(pmKeys);
+        }
+    
+    /**
      * Get the current member's pmKeys
      * 
      * @return          The current member's pmKeys
@@ -148,6 +158,25 @@ public class TOCManager {
         }
     }
     
+    /**
+     * Receives the values for the cost update and sends them to the database manager
+     * 
+     * @param cost the updated cost
+     * @param barcode the barcode of the item being updated
+     */
+    public void updateCost(double cost, int barcode) {
+        db.updateCost(cost, barcode);
+        }
+    
+    /**
+     * Receives the barcode of the item to be removed
+     * 
+     * @param barcode the barcode of the item to be removed
+     */
+    public void removeItem(String barcode) {
+        db.removeItem(barcode);
+        }
+        
     /**
      * Adds a new item to the database. Will check if the current member has the rights to modify the database
      * 
